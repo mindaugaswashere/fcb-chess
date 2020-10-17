@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Draggable from "react-draggable";
 
 interface Props {
+	movesCount: number;
 	highlightedSquares: Array<String>;
 	setHighlightedSquares: any;
 	currentPieces: any;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 const Piece = ({
+	movesCount,
 	highlightedSquares,
 	setHighlightedSquares,
 	currentPieces,
@@ -291,7 +293,11 @@ const Piece = ({
 	const onStart = (e: any, position: any) => {
 		const pieceName: string = pieceRef.current.id;
 		const fromWhichSquare: string = position.node.offsetParent.id;
-		highlighter(piece, fromWhichSquare);
+
+		const legalTurn =
+			(pieceName[0] === "W" && movesCount % 2 === 0) ||
+			(pieceName[0] === "B" && movesCount % 2 === 1);
+		if (legalTurn) highlighter(piece, fromWhichSquare);
 		console.log(
 			`You currently moving ${pieceName} piece \nFrom ${fromWhichSquare} square.`
 		);
@@ -311,12 +317,12 @@ const Piece = ({
 		const isLegalStep: any = highlightedSquares.find(
 			(element) => element === toWhichSquare
 		);
+
 		if (currentPieces[toWhichSquare]?.startsWith(pieceName[0])) {
 			console.log("You try capturing your own piece");
 			setNewPieces(pieceName, fromWhichSquare, fromWhichSquare);
 		} else if (isLegalStep) {
 			// Promote to queen
-
 			if (
 				(pieceName.endsWith("P") && toWhichSquare.endsWith("8")) ||
 				toWhichSquare.endsWith("1")

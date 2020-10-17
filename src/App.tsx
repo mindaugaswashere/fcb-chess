@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import Board from "./components/Board";
 import LoginForm from "./components/LoginForm";
 function App() {
-	const [open, setOpen] = React.useState(false);
+	const [open, setOpen] = useState(false);
+	const [movesCount, setMovesCount] = useState(0);
 	return (
 		<div className="main">
-			{open ? <Board /> : <LoginForm setOpen={setOpen} />}
+			{open ? (
+				<div>
+					<Board movesCount={movesCount} setMovesCount={setMovesCount} />
+					<div className="moves-counter">Movies count: {movesCount}</div>
+				</div>
+			) : (
+				<LoginForm setOpen={setOpen} />
+			)}
 		</div>
 	);
 }
