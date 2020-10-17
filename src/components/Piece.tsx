@@ -40,11 +40,10 @@ const Piece = ({
 		const upCharCode: number = 8;
 		const downCharCode: number = 1;
 		const squaresToHighlight: Array<string> = [];
+		const line = parseInt(square[1], 10);
 
 		const lineArray = (): Array<string> => {
-			const line = parseInt(square[1], 10);
 			let coords = [];
-
 			for (let i: number = line + 1; i <= upCharCode; i += 1) {
 				const forwardSquare: string = `${square[0]}${i}`;
 				if (currentPieces[forwardSquare] === null) {
@@ -89,7 +88,6 @@ const Piece = ({
 		};
 
 		const diagonalArray = (): Array<string> => {
-			const line = parseInt(square[1], 10);
 			let coords = [];
 			let modifier = 1;
 			for (let i: number = line + 1; i <= upCharCode; i += 1) {
@@ -163,18 +161,18 @@ const Piece = ({
 		};
 
 		switch (piece) {
+			case "BP":
 			case "WP": {
-				console.log("Moved with White pawn");
+				const modifier = piece === "WP" ? 1 : -1;
 				const forwardCoord: string = `${square[0]}${
-					parseInt(square[1], 10) + 1
+					parseInt(square[1], 10) + modifier
 				}`;
 				let diagonalCoordLeft: string =
-					String.fromCharCode(letterCharCode - 1) +
-					(parseInt(square[1], 10) + 1);
+					String.fromCharCode(letterCharCode - modifier) +
+					(parseInt(square[1], 10) + modifier);
 				let diagonalCoordRight: string =
-					String.fromCharCode(letterCharCode + 1) +
-					(parseInt(square[1], 10) + 1);
-
+					String.fromCharCode(letterCharCode + modifier) +
+					(parseInt(square[1], 10) + modifier);
 				// Checks if diagonal contain
 				const isDiagonalAvailable = (coord: string, color: String) => {
 					if (
@@ -186,25 +184,48 @@ const Piece = ({
 						return true;
 					}
 				};
-
-				if (letterCharCode > leftCharCode) {
-					if (isDiagonalAvailable(diagonalCoordLeft, piece[0])) {
-						squaresToHighlight.push(diagonalCoordLeft);
+				let isOnLeftEdge = letterCharCode > leftCharCode;
+				if (isOnLeftEdge) {
+					const diagonal =
+						piece === "WP" ? diagonalCoordLeft : diagonalCoordRight;
+					if (isDiagonalAvailable(diagonal, piece[0])) {
+						squaresToHighlight.push(diagonal);
 					}
 				}
 
-				if (letterCharCode < rightCharCode) {
-					if (isDiagonalAvailable(diagonalCoordRight, piece[0])) {
-						squaresToHighlight.push(diagonalCoordRight);
+				let isOnRightEdge = letterCharCode < rightCharCode;
+				if (isOnRightEdge) {
+					const diagonal =
+						piece === "WP" ? diagonalCoordRight : diagonalCoordLeft;
+					if (isDiagonalAvailable(diagonal, piece[0])) {
+						squaresToHighlight.push(diagonal);
 					}
 				}
 
 				const isForwardEmpty: boolean = currentPieces[forwardCoord] === null;
 				if (isForwardEmpty) squaresToHighlight.push(forwardCoord);
+				const forward1 = `${square[0]}${parseInt(square[1], 10) + modifier}`;
 
-				if (square.endsWith("2")) {
-					const forward2 = `${square[0]}${parseInt(square[1], 10) + 2}`;
-					squaresToHighlight.push(forward2);
+				if (square.endsWith("2") && piece === "WP") {
+					const forward2 = `${square[0]}${
+						parseInt(square[1], 10) + 2 * modifier
+					}`;
+					if (
+						currentPieces[forward1] === null &&
+						currentPieces[forward2] === null
+					)
+						squaresToHighlight.push(forward2);
+					setHighlightedSquares(squaresToHighlight);
+				} else if (
+					currentPieces[forward1] === null &&
+					square.endsWith("7") &&
+					piece === "BP"
+				) {
+					const forward2 = `${square[0]}${
+						parseInt(square[1], 10) + 2 * modifier
+					}`;
+					if (currentPieces[forward2] === null)
+						squaresToHighlight.push(forward2);
 					setHighlightedSquares(squaresToHighlight);
 				}
 
@@ -227,55 +248,37 @@ const Piece = ({
 				setHighlightedSquares([...lineArray(), ...diagonalArray()]);
 				break;
 
+			case "BK":
 			case "WK": {
-				const line = parseInt(square[1], 10);
-				let coords = [];
+				const isNearby = (
+					highlightedLetter: string,
+					highlightedLine: number
+				) => {
+					let highlightedLetterCode = highlightedLetter.charCodeAt(0);
+					for (let i = -1; i <= 1; i++) {
+						for (let j = -1; j <= 1; j++) {
+							if (
+								line + i === highlightedLine &&
+								letterCharCode + j === highlightedLetterCode
+							) {
+								return true;
+							}
+						}
+					}
+					return false;
+				};
 
-				for (let i: number = line + 1; i <= upCharCode; i += 1) {
-					const forwardSquare: string = `${square[0]}${i}`;
-					if (currentPieces[forwardSquare] === null) {
-						coords.push(forwardSquare);
-					} else if (!currentPieces[forwardSquare].startsWith(piece[0])) {
-						coords.push(forwardSquare);
-						break;
-					} else break;
-				}
+				const filtered = [
+					...lineArray(),
+					...diagonalArray(),
+				].filter((highlightedSquare) =>
+					isNearby(highlightedSquare[0], parseInt(highlightedSquare[1], 10))
+				);
 
-				for (let i: number = line - 1; i >= downCharCode; i -= 1) {
-					const downSquare: string = `${square[0]}${i}`;
-					if (currentPieces[downSquare] === null) {
-						coords.push(downSquare);
-					} else if (!currentPieces[downSquare].startsWith(piece[0])) {
-						coords.push(downSquare);
-						break;
-					} else break;
-				}
-
-				for (let i: number = letterCharCode - 1; i >= leftCharCode; i -= 1) {
-					const leftSquare: string = `${String.fromCharCode(i)}${square[1]}`;
-					if (currentPieces[leftSquare] === null) {
-						coords.push(leftSquare);
-					} else if (!currentPieces[leftSquare].startsWith(piece[0])) {
-						coords.push(leftSquare);
-						break;
-					} else break;
-				}
-
-				for (let i: number = letterCharCode + 1; i <= rightCharCode; i += 1) {
-					const rightSquare: string = `${String.fromCharCode(i)}${square[1]}`;
-					if (currentPieces[rightSquare] === null) {
-						coords.push(rightSquare);
-					} else if (!currentPieces[rightSquare].startsWith(piece[0])) {
-						coords.push(rightSquare);
-						break;
-					} else break;
-				}
-				setHighlightedSquares(coords);
+				setHighlightedSquares(filtered);
 				break;
 			}
-			case "BP":
-				console.log("Moved with Black pawn");
-				break;
+
 			default:
 				console.log("Moved with other piece, coming soon");
 				break;
@@ -313,8 +316,11 @@ const Piece = ({
 			setNewPieces(pieceName, fromWhichSquare, fromWhichSquare);
 		} else if (isLegalStep) {
 			// Promote to queen
-			if (pieceName.endsWith("P") && toWhichSquare.endsWith("8")) {
-				console.log("You promoted to queen");
+
+			if (
+				(pieceName.endsWith("P") && toWhichSquare.endsWith("8")) ||
+				toWhichSquare.endsWith("1")
+			) {
 				const queenPiece = `${pieceName[0]}Q`;
 				setNewPieces(queenPiece, fromWhichSquare, toWhichSquare);
 			} else {
