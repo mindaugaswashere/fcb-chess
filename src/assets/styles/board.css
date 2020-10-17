@@ -1,0 +1,179 @@
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.board-main {
+  height: 600px;
+  width: 600px;
+  margin: 0 auto;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  animation: appear 1s ease;
+}
+
+.chess-square {
+  height: 12.5%;
+  width: 12.5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.chess-square-coord {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 0.75rem;
+}
+
+.color-white {
+  background: #d81c0e;
+}
+
+.color-whiteh {
+  background: #6e0f02;
+}
+
+.color-black {
+  background: #3848d4;
+}
+
+.color-blackh {
+  background: #2100dd;
+}
+
+.piece {
+  height: 90%;
+  width: 90%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 10;
+}
+
+.piece.react-draggable-dragging {
+  z-index: 11;
+}
+
+.piece-BR {
+  background-image: url("./../images/chess-images/br.png");
+}
+
+.piece-BN {
+  background-image: url("./../images/chess-images/bn.png");
+}
+
+.piece-BB {
+  background-image: url("./../images/chess-images/bb.png");
+}
+
+.piece-BK {
+  background-image: url("./../images/chess-images/bk.png");
+}
+
+.piece-BQ {
+  background-image: url("./../images/chess-images/bq.png");
+}
+
+.piece-BP {
+  background-image: url("./../images/chess-images/bp.png");
+}
+
+.piece-WR {
+  background-image: url("./../images/chess-images/wr.png");
+}
+
+.piece-WN {
+  background-image: url("./../images/chess-images/wn.png");
+}
+
+.piece-WB {
+  background-image: url("./../images/chess-images/wb.png");
+}
+
+.piece-WK {
+  background-image: url("./../images/chess-images/wk.png");
+}
+
+.piece-WQ {
+  background-image: url("./../images/chess-images/wq.png");
+}
+
+.piece-WP {
+  background-image: url("./../images/chess-images/wp.png");
+}
+
+.centered-text {
+  text-align: center;
+  width: 600px;
+}
+
+.site-header {
+  text-align: center;
+  width: 100%;
+}
+
+.white-text {
+  color: #fff;
+}
+
+.submit-button {
+  outline: none;
+  border: 3px solid #004d98;
+  border-radius: 6px;
+  background-color: #edbb00;
+  padding: 5px 58px;
+  text-align: center;
+  color: #a50044;
+  display: inline-block;
+  font-size: 25px;
+}
+
+.submit-button:hover {
+  transition: all 0.2s linear;
+  background-color: #ffd22f;
+  color: #004d98;
+}
+
+.submit-button:active {
+  transition: all 0.1s linear;
+  background-color: #004d98;
+  color: #ffd22f;
+}
+
+.main {
+  background-image: url("../images/chess-images/abc2.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 100px;
+}
+
+.login-form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-input {
+  border: 3px solid #a50044;
+  border-radius: 6px;
+  color: #edbb00;
+  outline: none;
+  background-color: #004d98;
+  line-height: 32px;
+  margin-bottom: 12px;
+  text-indent: 12px;
+  font-weight: bold;
+}
+
+.login-input:focus {
+  border-color: #edbb00;
+}
