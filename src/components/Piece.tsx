@@ -36,13 +36,15 @@ const Piece = ({
 	};
 
 	const highlighter = (piece: string, square: string) => {
+		const line = parseInt(square[1], 10);
 		const letterCharCode: number = square[0].charCodeAt(0);
+
 		const leftCharCode: number = 65;
 		const rightCharCode: number = 72;
 		const upCharCode: number = 8;
 		const downCharCode: number = 1;
+
 		const squaresToHighlight: Array<string> = [];
-		const line = parseInt(square[1], 10);
 
 		const lineArray = (): Array<string> => {
 			let coords = [];
@@ -161,10 +163,133 @@ const Piece = ({
 			}
 			return coords;
 		};
-
 		switch (piece) {
+			case "BN":
+			case "WN": {
+				const isLegal = (square: string) => {
+					const color = piece[0];
+					const squarestate = currentPieces[square];
+					const answer = squarestate?.startsWith(color) ? false : true;
+					return answer;
+				};
+				let reachUp = false;
+				let reachUpPre = false;
+
+				let reachDown = false;
+				let reachDownPre = false;
+
+				let reachLeft = false;
+				let reachLeftPre = false;
+
+				let reachRight = false;
+				let reachRightPre = false;
+
+				if (line <= upCharCode - 1) {
+					reachUpPre = true;
+					if (line <= upCharCode - 2) {
+						reachUp = true;
+					}
+				}
+
+				if (line >= downCharCode + 1) {
+					reachDownPre = true;
+					if (line >= downCharCode + 2) {
+						reachDown = true;
+					}
+				}
+
+				if (letterCharCode >= leftCharCode + 1) {
+					reachLeftPre = true;
+					if (letterCharCode >= leftCharCode + 2) {
+						reachLeft = true;
+					}
+				}
+
+				if (letterCharCode <= rightCharCode - 1) {
+					reachRightPre = true;
+					if (letterCharCode <= rightCharCode - 2) {
+						reachRight = true;
+					}
+				}
+
+				if (reachUp) {
+					if (reachRightPre) {
+						const letter = String.fromCharCode(letterCharCode + 1);
+						const squareToHighlight = `${letter}${line + 2}`;
+						if (isLegal(squareToHighlight))
+							squaresToHighlight.push(squareToHighlight);
+					}
+
+					if (reachLeftPre) {
+						const letter = String.fromCharCode(letterCharCode - 1);
+						const squareToHighlight = `${letter}${line + 2}`;
+						if (isLegal(squareToHighlight))
+							squaresToHighlight.push(squareToHighlight);
+					}
+				}
+
+				if (reachDown) {
+					if (reachRightPre) {
+						const letter = String.fromCharCode(letterCharCode + 1);
+						const squareToHighlight = `${letter}${line - 2}`;
+						if (isLegal(squareToHighlight))
+							squaresToHighlight.push(squareToHighlight);
+					}
+
+					if (reachLeftPre) {
+						const letter = String.fromCharCode(letterCharCode - 1);
+						const squareToHighlight = `${letter}${line - 2}`;
+						if (isLegal(squareToHighlight))
+							squaresToHighlight.push(squareToHighlight);
+					}
+				}
+
+				if (reachLeft) {
+					if (reachUpPre) {
+						const letter = String.fromCharCode(letterCharCode - 2);
+						const squareToHighlight = `${letter}${line + 1}`;
+						if (isLegal(squareToHighlight))
+							squaresToHighlight.push(`${letter}${line + 1}`);
+					}
+					if (reachDownPre) {
+						const letter = String.fromCharCode(letterCharCode - 2);
+						const squareToHighlight = `${letter}${line - 1}`;
+						if (isLegal(squareToHighlight))
+							squaresToHighlight.push(squareToHighlight);
+					}
+				}
+
+				if (reachRight) {
+					if (reachUpPre) {
+						const letter = String.fromCharCode(letterCharCode + 2);
+						const squareToHighlight = `${letter}${line + 1}`;
+						if (isLegal(squareToHighlight))
+							squaresToHighlight.push(squareToHighlight);
+					}
+					if (reachDownPre) {
+						const letter = String.fromCharCode(letterCharCode + 2);
+						const squareToHighlight = `${letter}${line - 1}`;
+						if (isLegal(squareToHighlight))
+							squaresToHighlight.push(squareToHighlight);
+					}
+				}
+
+				console.log({
+					reachUp,
+					reachUpPre,
+					reachDown,
+					reachDownPre,
+					reachLeft,
+					reachLeftPre,
+					reachRight,
+					reachRightPre,
+				});
+				setHighlightedSquares(squaresToHighlight);
+				break;
+			}
+
 			case "BP":
-			case "WP": {
+			case "WP":
 				const modifier = piece === "WP" ? 1 : -1;
 				const forwardCoord: string = `${square[0]}${
 					parseInt(square[1], 10) + modifier
@@ -233,7 +358,6 @@ const Piece = ({
 
 				setHighlightedSquares(squaresToHighlight);
 				break;
-			}
 
 			case "WR":
 			case "BR":
