@@ -7,8 +7,8 @@
 	}
 }
 .board-main {
-	height: 600px;
-	width: 600px;
+	height: 300px;
+	width: 300px;
 	margin: 0 auto;
 	border-radius: 6px;
 	overflow: hidden;
@@ -152,7 +152,7 @@
 	background-image: url("../images/chess-images/abc2.jpg");
 	background-repeat: no-repeat;
 	background-size: cover;
-	padding: 100px;
+	padding: 100px 0;
 }
 
 .login-form {
