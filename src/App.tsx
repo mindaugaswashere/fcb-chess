@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Board from "./components/Board";
 import LoginForm from "./components/LoginForm";
 function App() {
-	const [open, setOpen] != useState(false);
+	const [open, setOpen] = useState(false);
 	const [movesCount, setMovesCount] = useState(0);
 	return (
 		<div className="main">
