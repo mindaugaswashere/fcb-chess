@@ -26,13 +26,14 @@ const Piece = ({
   const letterArray = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   const getDiff: any = (
     x: any,
-    y: any
-    // squareHeight: number
+    y: any,
+    fromWhichSquare: string,
+    squareHeight: number
   ): string => {
     // eslint-disable-next-line no-debugger
     debugger;
-    const xDiff = Math.floor(x / 75);
-    const yDiff = 8 - Math.floor(y / 75);
+    const xDiff = Math.floor(x / squareHeight);
+    const yDiff = 8 - Math.floor(y / squareHeight);
     return `${letterArray[xDiff]}${yDiff}`;
   };
 
