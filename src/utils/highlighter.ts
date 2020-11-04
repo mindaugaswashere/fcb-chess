@@ -126,8 +126,14 @@ const highlighter = (piece: string, square: string, currentPieces: [string]) => 
     }
     return coords;
   };
+  console.log(piece, 'lepiece');
+
   switch (piece) {
-    case 'WN' || 'BN': {
+    case 'BN':
+    case 'WN': {
+      console.log(piece, 'lepiece');
+      /*eslint-disable */
+      debugger; 
       const isLegal = (checkableSquare: any) => {
         const color = piece[0];
         const squarestate = currentPieces[checkableSquare];
@@ -245,8 +251,8 @@ const highlighter = (piece: string, square: string, currentPieces: [string]) => 
 
       return squaresToHighlight;
     }
-
-    case 'WP' || 'BP': {
+    case 'BP':
+    case 'WP': {
       const modifier = piece === 'WP' ? 1 : -1;
       const forwardCoord: any = `${square[0]}${
         parseInt(square[1], 10) + modifier
@@ -317,19 +323,22 @@ const highlighter = (piece: string, square: string, currentPieces: [string]) => 
       return squaresToHighlight;
     }
 
-    case 'WR' || 'BR': {
+    case 'BR':
+    case 'WR': {
       return lineArray();
     }
 
-    case 'WB' || 'BB': {
+    case 'WB': 
+    case 'BB': {
       return diagonalArray();
     }
 
-    case 'WQ' || 'BQ': {
+    case 'BQ':
+    case 'WQ': {
       return [...lineArray(), ...diagonalArray()];
     }
-
-    case 'WK' || 'BK': {
+    case 'BK':
+    case 'WK': {
       const isNearby = (
         highlightedLetter: string,
         highlightedLine: number
